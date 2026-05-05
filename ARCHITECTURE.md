@@ -268,14 +268,15 @@ Deploy-Configs -SourceDir [str]     → [void]
                           Left-hand   — Alt+WASD = focus, Alt+Shift+WASD = move (all left)
                           Split       — Alt+WASD = move window, Alt+OKL; = focus window
                           Vim HJKL    — Alt+HJKL = focus, Alt+WASD = move
-[9]  Personal         Text inputs (all optional/skippable):
+[9]  Startup          Choose whether the rendered komorebi.ahk session is added to Windows startup
+[10] Personal         Text inputs (all optional/skippable):
                         • Weather location (e.g. "New York, NY, USA")
                         • Weather API key (free at weatherapi.com — link shown)
                         • Clock timezones (e.g. EST, UTC)
-[10] Confirm          Full summary of all choices, Enter to install / Esc to go back
-[11] Installing       Live progress — each step shows name + spinner + ✓ / ✗
-[12] Post-install     Optional Flow Launcher plugin commands copied for `pm install`
-[13] Done             Success message, restart tips, backup path shown
+[11] Confirm          Full summary of all choices, Enter to install / Esc to go back
+[12] Installing       Live progress — each step shows name + spinner + ✓ / ✗
+[13] Post-install     Optional Flow Launcher plugin commands copied for `pm install`
+[14] Done             Success message, restart tips, backup path shown
 ```
 
 #### Bootstrap logic

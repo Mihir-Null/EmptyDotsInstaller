@@ -195,8 +195,7 @@ function Set-StartupItems {
         Ensures one Komorebi startup entry owns the full desktop session.
     #>
     foreach ($legacy in @('Komorebi','YASB','KomorebiAHK','Flow Launcher','FlowLauncher')) {
-        Script:Remove-StartupEntry -Name $legacy
-        Script:Remove-RunStartupEntry -Name $legacy
+        Clear-StartupItems -Name $legacy
     }
 
     $komorebiBin = Get-Command komorebic.exe -ErrorAction SilentlyContinue |
@@ -215,4 +214,19 @@ function Set-StartupItems {
     }
 }
 
-Export-ModuleMember -Function Backup-Configs, Deploy-Configs, Set-StartupItems
+function Clear-StartupItems {
+    param([string] $Name)
+
+    $names = if ($Name) {
+        @($Name)
+    } else {
+        @('Komorebi','YASB','KomorebiAHK','Flow Launcher','FlowLauncher')
+    }
+
+    foreach ($entryName in $names) {
+        Script:Remove-StartupEntry -Name $entryName
+        Script:Remove-RunStartupEntry -Name $entryName
+    }
+}
+
+Export-ModuleMember -Function Backup-Configs, Deploy-Configs, Set-StartupItems, Clear-StartupItems

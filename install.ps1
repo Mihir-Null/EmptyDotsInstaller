@@ -64,7 +64,7 @@ $null = [Console]::ReadKey($true)
 
 $UserConfig = @{}
 
-Write-SectionHeader 'Code Editor' 2 9
+Write-SectionHeader 'Code Editor' 2 10
 
 $editorKeys = @('VSCode','VSCodium','Zed','Cursor')
 $editorIdx = Show-Menu `
@@ -84,7 +84,7 @@ $UserConfig.CodeEditor = $editorKeys[$editorIdx]
 #region ── Step 3: App selection ───────────────────────────────────────────────
 
 if (-not $SkipApps) {
-    Write-SectionHeader 'App Installation' 3 9
+    Write-SectionHeader 'App Installation' 3 10
 
     if (-not (Test-WingetAvailable)) {
         Write-Warn 'winget not found -- skipping app installation.'
@@ -132,7 +132,7 @@ if (-not $SkipApps) {
 
 #region ── Step 4: Theme ───────────────────────────────────────────────────────
 
-Write-SectionHeader 'Color Theme' 4 9
+Write-SectionHeader 'Color Theme' 4 10
 
 $themeFiles  = @('catppuccin-mocha','nord','tokyo-night','gruvbox')
 $themeNames  = @('Catppuccin Mocha','Nord','Tokyo Night','Gruvbox Dark')
@@ -158,7 +158,7 @@ $UserConfig.ThemeFile = $themeFiles[$themeIdx]
 
 #region ── Step 5: Font ────────────────────────────────────────────────────────
 
-Write-SectionHeader 'Nerd Font' 5 9
+Write-SectionHeader 'Nerd Font' 5 10
 
 $fontKeys  = @('JetBrains Mono','Fira Code','Cascadia Code','Hack','GohuFont','Iosevka')
 $fontDescs = @(
@@ -185,7 +185,7 @@ $UserConfig.FontSize   = 14
 
 #region ── Step 6: Shell ───────────────────────────────────────────────────────
 
-Write-SectionHeader 'Default Terminal Shell' 6 9
+Write-SectionHeader 'Default Terminal Shell' 6 10
 
 # Detect WSL and identify the default distro. PowerShell 5.1 can capture
 # wsl.exe output with embedded NULs, so normalize those before parsing.
@@ -229,7 +229,7 @@ $UserConfig.WslDetected  = $wslAvailable
 
 #region ── Step 7: Look & Feel ─────────────────────────────────────────────────
 
-Write-SectionHeader 'Look & Feel' 7 9
+Write-SectionHeader 'Look & Feel' 7 10
 
 # Transparency
 $bdIdx = Show-Menu `
@@ -313,7 +313,7 @@ $UserConfig.Animation = @('Off','Fast','Medium','Slow')[$animIdx]
 
 #region ── Step 8: Keybindings ─────────────────────────────────────────────────
 
-Write-SectionHeader 'Keybindings' 8 9
+Write-SectionHeader 'Keybindings' 8 10
 
 $modIdx = Show-Menu `
     -Title       'Primary modifier key' `
@@ -335,9 +335,25 @@ $UserConfig.KeyLayout = @('Left-hand','Split','Vim')[$layoutIdx]
 
 #endregion
 
-#region ── Step 9: Personal settings ──────────────────────────────────────────
+#region ── Step 9: Startup ────────────────────────────────────────────────────
 
-Write-SectionHeader 'Personal Settings (all optional -- press Escape to skip)' 9 9
+Write-SectionHeader 'Startup' 9 10
+
+$startupIdx = Show-Menu `
+    -Title       'Start the desktop session when Windows starts?' `
+    -Options     @('Yes','No') `
+    -Descriptions @('Add Komorebi startup entry that launches Komorebi, YASB, and Flow Launcher',
+                    'Do not add startup entry; launch the bundled komorebi.ahk script manually') `
+    -Default     0
+
+if ($startupIdx -lt 0) { Write-Host 'Installation cancelled.'; exit 1 }
+$UserConfig.AddStartup = ($startupIdx -eq 0)
+
+#endregion
+
+#region ── Step 10: Personal settings ─────────────────────────────────────────
+
+Write-SectionHeader 'Personal Settings (all optional -- press Escape to skip)' 10 10
 
 $weatherLoc = Read-TextInput `
     -Prompt  'Weather location' `
@@ -363,7 +379,7 @@ $UserConfig.ClockTimezones = if ($tzInput) { $tzInput } else { '["UTC"]' }
 
 #endregion
 
-#region ── Step 9: Confirmation ───────────────────────────────────────────────
+#region ── Step 11: Confirmation ──────────────────────────────────────────────
 
 Show-Header -Subtitle 'Review your choices'
 
@@ -378,6 +394,7 @@ Write-Host "  $($C.BrightYellow)Gaps$($C.Reset)           $($UserConfig.GapSize)
 Write-Host "  $($C.BrightYellow)Borders$($C.Reset)        $($UserConfig.BorderStyle) · $($UserConfig.BorderWidth)"
 Write-Host "  $($C.BrightYellow)Animation$($C.Reset)      $($UserConfig.Animation)"
 Write-Host "  $($C.BrightYellow)Keybindings$($C.Reset)    $($UserConfig.Modifier) + $($UserConfig.KeyLayout)"
+Write-Host "  $($C.BrightYellow)Startup$($C.Reset)        $(if ($UserConfig.AddStartup) { 'enabled' } else { 'manual launch only' })"
 Write-Host "  $($C.BrightYellow)Weather$($C.Reset)        $(if ($UserConfig.WeatherKey) { $UserConfig.WeatherLocation } else { 'disabled' })"
 Write-Host "  $($C.BrightYellow)Timezones$($C.Reset)      $($UserConfig.ClockTimezones)"
 Write-Host ''
@@ -396,7 +413,7 @@ if ($confirm.Key -eq 'Escape') { Write-Host 'Installation cancelled.'; exit 0 }
 
 #endregion
 
-#region ── Step 10: Installation ──────────────────────────────────────────────
+#region ── Step 12: Installation ──────────────────────────────────────────────
 
 Show-Header -Subtitle 'Installing...'
 $totalSteps = 4
@@ -488,13 +505,23 @@ if (-not $DryRun) {
     $deployErrors | ForEach-Object { Write-Warn "  $($_.Key): $($_.Value)" }
     Write-Success "Configs deployed ($($results.Count - @($deployErrors).Count)/$($results.Count) files)"
 
-    Write-Step "Setting up startup entries..."
-    try {
-        Set-StartupItems
-        Write-Success 'Startup entry configured (Komorebi desktop session)'
-    } catch {
-        Write-Warn "Startup setup partial: $_"
-        Write-Info 'You can add shortcuts to the Startup folder manually'
+    if ($UserConfig.AddStartup) {
+        Write-Step "Setting up startup entries..."
+        try {
+            Set-StartupItems
+            Write-Success 'Startup entry configured (Komorebi desktop session)'
+        } catch {
+            Write-Warn "Startup setup partial: $_"
+            Write-Info 'You can add shortcuts to the Startup folder manually'
+        }
+    } else {
+        Write-Step "Leaving desktop session startup disabled..."
+        try {
+            Clear-StartupItems
+            Write-Success 'Startup entries removed/left disabled'
+        } catch {
+            Write-Warn "Startup cleanup partial: $_"
+        }
     }
 
     if (($UserConfig.AppsToInstall -contains 'YASB') -or (Test-AppInstalled -AppName 'YASB')) {
@@ -517,7 +544,7 @@ if (-not $DryRun) {
 
 #endregion
 
-#region ── Step 11: Optional Flow Launcher plugins ─────────────────────────────
+#region ── Step 13: Optional Flow Launcher plugins ─────────────────────────────
 
 if (-not $DryRun -and (($UserConfig.AppsToInstall -contains 'FlowLauncher') -or (Test-AppInstalled -AppName 'FlowLauncher'))) {
     Show-Header -Subtitle 'Optional Flow Launcher plugins'
@@ -558,16 +585,24 @@ if (-not $DryRun -and (($UserConfig.AppsToInstall -contains 'FlowLauncher') -or 
 
 #endregion
 
-#region ── Step 12: Done ───────────────────────────────────────────────────────
+#region ── Step 14: Done ───────────────────────────────────────────────────────
 
 Show-Header -Subtitle 'Installation complete!'
 
 Write-Host "  $($C.BrightGreen)Everything is set up.$($C.Reset)"
 Write-Host ''
 Write-Host "  $($C.BrightYellow)Next steps:$($C.Reset)"
-Write-Host "    1. Sign out and back in (or restart) to apply startup items"
+if ($UserConfig.AddStartup) {
+    Write-Host "    1. Sign out and back in (or restart) to apply startup items"
+} else {
+    Write-Host "    1. Launch the desktop session manually when you want it"
+}
 Write-Host "    2. Open WezTerm -- it should start with your new theme and font"
-Write-Host "    3. Komorebi starts the whole desktop session: komorebi, YASB, Flow Launcher"
+if ($UserConfig.AddStartup) {
+    Write-Host "    3. Komorebi starts the whole desktop session: komorebi, YASB, Flow Launcher"
+} else {
+    Write-Host "    3. Launch manually with: AutoHotkey64.exe `"$env:USERPROFILE\.config\komorebi\komorebi.ahk`""
+}
 Write-Host ''
 
 if (-not $UserConfig.WeatherKey) {

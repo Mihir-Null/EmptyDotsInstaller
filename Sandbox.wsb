@@ -1,0 +1,23 @@
+<Configuration>
+  <MappedFolders>
+    <MappedFolder>
+      <!-- Mounts the EmptyDotFiles folder into the sandbox at C:\Dotfiles.
+           Read-write so the installer can deploy configs inside the sandbox
+           user profile. Host files are never modified. -->
+      <HostFolder>C:\Users\Empty\Documents\Claude\Projects\Windows Desktop Environment</HostFolder>
+      <SandboxFolder>C:\Dotfiles</SandboxFolder>
+      <ReadOnly>false</ReadOnly>
+    </MappedFolder>
+  </MappedFolders>
+
+  <!-- Bootstraps the sandbox: repairs/installs winget via Microsoft.WinGet.Client,
+       installs Windows Terminal, then launches the EmptyDotFiles installer. -->
+  <LogonCommand>
+    <Command>cmd.exe /c start "EmptyDotFiles Sandbox Bootstrap" C:\Dotfiles\Bootstrap-Sandbox.cmd</Command>
+  </LogonCommand>
+
+  <Networking>Enable</Networking>
+
+  <!-- Extra memory: winget bootstrap + app installs are hungry -->
+  <MemoryInMB>8192</MemoryInMB>
+</Configuration>

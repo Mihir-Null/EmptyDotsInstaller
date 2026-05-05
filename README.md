@@ -68,8 +68,9 @@ The installer asks for:
 5. WezTerm default shell: WSL, PowerShell 7, or cmd.
 6. YASB and Komorebi appearance settings.
 7. Komorebi keybinding layout.
-8. Weather and clock settings.
-9. Optional Flow Launcher plugin install commands.
+8. Whether to add the desktop session to Windows startup.
+9. Weather and clock settings.
+10. Optional Flow Launcher plugin install commands.
 
 Useful flags:
 
@@ -110,8 +111,8 @@ Before overwriting an existing file, the installer backs it up under:
 Startup setup:
 
 - Removes old separate Startup entries for Komorebi, YASB, KomorebiAHK, and Flow Launcher.
-- Creates a single `Komorebi` Startup folder shortcut.
-- Creates `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\Komorebi`.
+- If enabled during install, creates a single `Komorebi` Startup folder shortcut.
+- If enabled during install, creates `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\Komorebi`.
 - Points the startup entry at AutoHotkey running `%USERPROFILE%\.config\komorebi\komorebi.ahk`.
 - `komorebi.ahk` starts Komorebi, YASB, and Flow Launcher together.
 - Closing the desktop session through `Ctrl+Alt+Shift+K` stops Flow Launcher, YASB, and Komorebi.
@@ -141,6 +142,36 @@ Workspace keys:
 - `Mod+1` through `Mod+6`: focus workspaces.
 - `Win+Shift+1` through `Win+Shift+6`: move window and follow.
 - `Mod+Shift+1` through `Mod+Shift+6`: move window silently.
+
+## Launching The Desktop Session
+
+After install, the bundled desktop-session script is deployed to:
+
+```text
+%USERPROFILE%\.config\komorebi\komorebi.ahk
+```
+
+Run it with AutoHotkey v2:
+
+```powershell
+& "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe" "$env:USERPROFILE\.config\komorebi\komorebi.ahk"
+```
+
+That one script starts:
+
+```text
+komorebi
+yasb
+Flow Launcher
+```
+
+To stop the full session, press:
+
+```text
+Ctrl+Alt+Shift+K
+```
+
+The installer includes a startup screen. Choose `Yes` to add the rendered `komorebi.ahk` session to Windows startup. Choose `No` to leave startup disabled and launch the script manually when needed.
 
 ## Testing In Windows Sandbox
 
