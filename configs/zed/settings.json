@@ -1,0 +1,9 @@
+{
+  "theme": "{{ZED_THEME}}",
+  "buffer_font_family": "{{FONT_FAMILY}}",
+  "buffer_font_size": {{FONT_SIZE}},
+  "terminal": {
+    "font_family": "{{FONT_FAMILY}}",
+    "font_size": {{FONT_SIZE}}
+  }
+}

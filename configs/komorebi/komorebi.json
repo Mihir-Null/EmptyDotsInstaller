@@ -1,0 +1,66 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/v0.1.40/schema.json",
+  "app_specific_configuration_path": "$Env:KOMOREBI_CONFIG_HOME/applications.json",
+  "window_hiding_behaviour": "Hide",
+  "cross_monitor_move_behaviour": "Insert",
+  "default_workspace_padding": {{GAP_SIZE}},
+  "default_container_padding": {{GAP_SIZE}},
+  "border": true,
+  "border_implementation": "Komorebi",
+  "border_style": "{{BORDER_STYLE}}",
+  "border_width": {{BORDER_WIDTH}},
+  "border_colours": {
+    "single":    "{{BORDER_COLOR_SINGLE}}",
+    "stack":     "{{BORDER_COLOR_STACK}}",
+    "monocle":   "{{BORDER_COLOR_MONOCLE}}",
+    "unfocused": "{{BORDER_COLOR_UNFOCUSED}}"
+  },
+  "animation": {
+    "enabled":  {{ANIMATION_ENABLED}},
+    "duration": {{ANIMATION_DURATION}},
+    "fps":      240,
+    "style":    "EaseOutCubic"
+  },
+  "manage_rules": [
+    [
+      { "kind": "Exe",   "id": "steamwebhelper.exe",     "matching_strategy": "Equals" },
+      { "kind": "Title", "id": "notificationtoasts_",    "matching_strategy": "DoesNotContain" }
+    ],
+    { "kind": "Exe", "id": "upc.exe",      "matching_strategy": "Equals" },
+    { "kind": "Exe", "id": "Vesktop.exe",  "matching_strategy": "Equals" },
+    { "kind": "Exe", "id": "claude.exe",   "matching_strategy": "Equals" }
+  ],
+  "floating_applications": [
+    [
+      { "kind": "Class", "id": "SDL_app",          "matching_strategy": "Equals" },
+      { "kind": "Exe",   "id": "steamwebhelper.exe","matching_strategy": "DoesNotEqual" }
+    ],
+    { "kind": "Class", "id": "BATTLESWIN", "matching_strategy": "Equals" },
+    { "kind": "Class", "id": "pygame",     "matching_strategy": "Equals" },
+    { "kind": "Class", "id": "GLFW30",     "matching_strategy": "Equals" }
+  ],
+  "stackbar": {
+    "height": 40,
+    "mode": "OnStack",
+    "tabs": {
+      "width":          300,
+      "focused_text":   "{{BORDER_COLOR_STACK}}",
+      "unfocused_text": "#b3b3b3",
+      "background":     "{{STACKBAR_BG}}"
+    }
+  },
+  "ignore_rules": [
+    { "kind": "Title", "id": "WaitForMeKomorebi",  "matching_strategy": "Contains" },
+    { "kind": "Exe",   "id": "Flow.Launcher",       "matching_strategy": "Contains" }
+  ],
+  "mouse_follows_focus": true,
+  "launch_options": {
+    "bar":                false,
+    "whkd":               false,
+    "masir":              true,
+    "clean_state":        false,
+    "await_configuration":false,
+    "tcp_port":           null,
+    "config_file_path":   null
+  }
+}

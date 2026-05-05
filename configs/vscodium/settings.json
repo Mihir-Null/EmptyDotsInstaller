@@ -1,0 +1,11 @@
+{
+    "workbench.colorTheme": "{{VSCODIUM_THEME}}",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.productIconTheme": "material-product-icons",
+    "editor.fontFamily": "{{FONT_FAMILY}}, Consolas, 'Courier New', monospace",
+    "editor.fontSize": {{FONT_SIZE}},
+    "editor.fontLigatures": true,
+    "terminal.integrated.fontFamily": "{{FONT_FAMILY}}",
+    "terminal.integrated.fontLigatures.enabled": true,
+    "terminal.integrated.customGlyphs": true{{VSCODIUM_WSL_SETTINGS}}
+}

@@ -1,0 +1,16 @@
+{
+  "Theme": "{{FLOW_THEME}}",
+  "ColorScheme": "Dark",
+  "BackdropType": "{{FLOW_BACKDROP}}",
+  "UseAnimation": true,
+  "AnimationSpeed": "Medium",
+  "HideWhenDeactivated": true,
+  "ShowAtTopmost": true,
+  "StartFlowLauncherOnSystemStartup": false,
+  "HideNotifyIcon": false,
+  "MaxResultsToShow": 8,
+  "QuerySearchPrecision": "Regular",
+  "UseGlyphIcons": true,
+  "ShowHomePage": true,
+  "UseSound": false
+}
