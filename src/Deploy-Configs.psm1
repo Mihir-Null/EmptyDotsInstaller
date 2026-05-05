@@ -205,11 +205,9 @@ function Set-StartupItems {
     $ahkConfig = "$env:USERPROFILE\.config\komorebi\komorebi.ahk"
     if ($ahkBin -and (Test-Path $ahkConfig)) {
         $arguments = "`"$ahkConfig`""
-        Add-StartupEntry -Name 'Komorebi' -TargetPath $ahkBin -Arguments $arguments
         Script:Set-RunStartupEntry -Name 'Komorebi' -TargetPath $ahkBin -Arguments $arguments
     } elseif ($komorebiBin) {
         $komorebiExe = $komorebiBin.Replace('komorebic.exe','komorebi.exe')
-        Add-StartupEntry -Name 'Komorebi' -TargetPath $komorebiExe -Arguments 'start --masir'
         Script:Set-RunStartupEntry -Name 'Komorebi' -TargetPath $komorebiExe -Arguments 'start --masir'
     }
 }

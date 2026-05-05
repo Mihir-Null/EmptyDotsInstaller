@@ -111,8 +111,7 @@ Before overwriting an existing file, the installer backs it up under:
 Startup setup:
 
 - Removes old separate Startup entries for Komorebi, YASB, KomorebiAHK, and Flow Launcher.
-- If enabled during install, creates a single `Komorebi` Startup folder shortcut.
-- If enabled during install, creates `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\Komorebi`.
+- If enabled during install, creates one startup entry at `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\Komorebi`.
 - Points the startup entry at AutoHotkey running `%USERPROFILE%\.config\komorebi\komorebi.ahk`.
 - `komorebi.ahk` starts Komorebi, YASB, and Flow Launcher together.
 - Closing the desktop session through `Ctrl+Alt+Shift+K` stops Flow Launcher, YASB, and Komorebi.
@@ -165,6 +164,8 @@ yasb
 Flow Launcher
 ```
 
+The script checks for already-running `komorebi.exe`, `yasb.exe`, and `Flow.Launcher.exe` before starting them, so rerunning the session launcher does not intentionally duplicate those processes.
+
 To stop the full session, press:
 
 ```text
@@ -216,7 +217,6 @@ The installer starts the desktop environment through AutoHotkey so one entry con
 Expected startup locations:
 
 ```text
-%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\Komorebi.lnk
 HKCU\Software\Microsoft\Windows\CurrentVersion\Run\Komorebi
 ```
 

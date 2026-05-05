@@ -56,7 +56,7 @@ CloseProcessByName(processName) {
 }
 
 StartDesktopEnvironment() {
-    Komorebic("start --masir")
+    RunIfNotRunning("komorebi.exe", "komorebic.exe start --masir")
     RunIfNotRunning("yasb.exe", "yasb.exe")
     RunIfNotRunning("Flow.Launcher.exe", ResolveFlowLauncherCommand())
 }
